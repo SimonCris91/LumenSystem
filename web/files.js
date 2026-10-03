@@ -60,13 +60,13 @@
       return '<div class="page-heading"><div><span class="eyebrow">ARCHIVIO CONDIVISO</span><h1>File condivisi</h1><p class="page-subtitle">Accedi al server Lumen System per caricare e scaricare i file dell’officina.</p></div></div>' +
         '<section class="wh-panel"><div class="wh-notice"><strong>Server non collegato.</strong> Apri l’indirizzo del server e accedi prima di usare l’archivio condiviso.</div></section>';
     }
-    var folderLabels = { all: "Tutti i file", rosetta: "Rosetta", sketchup: "SketchUp" };
+    var folderLabels = { all: "Tutti i file" };
     var folder = folderLabels[cache.folder] ? cache.folder : "all";
-    var emptyLabels = { all: "Nessun file condiviso.", rosetta: "Nessun file .NGC nella cartella Rosetta.", sketchup: "Nessun file .SKP nella cartella SketchUp." };
+    var emptyLabels = { all: "Nessun file condiviso." };
     var rows = renderFileRows(cache.files, emptyLabels[folder]);
     return '<div class="page-heading"><div><span class="eyebrow">ARCHIVIO CONDIVISO</span><h1>File condivisi</h1><p class="page-subtitle">Carica e scarica documenti accessibili ai dispositivi autorizzati.</p></div></div>' +
-      '<div class="file-folder-tabs"><button class="button button-quiet file-folder-tab ' + (folder === "all" ? "is-active" : "") + '" type="button" data-file-action="all">Tutti i file</button><button class="button button-quiet file-folder-tab ' + (folder === "rosetta" ? "is-active" : "") + '" type="button" data-file-action="rosetta">Rosetta · CNC</button><button class="button button-quiet file-folder-tab ' + (folder === "sketchup" ? "is-active" : "") + '" type="button" data-file-action="sketchup">SketchUp</button></div>' +
-      '<section class="wh-panel rosetta-upload-panel"><div class="wh-panel-heading"><div><span class="eyebrow">CARICAMENTO AUTOMATICO</span><h2>' + esc(folderLabels[folder]) + '</h2><p>Usa un solo caricamento: i file .NGC vanno in Rosetta, i .SKP in SketchUp; gli altri restano nei File condivisi.</p></div></div>' +
+      '' +
+      '<section class="wh-panel rosetta-upload-panel"><div class="wh-panel-heading"><div><span class="eyebrow">ARCHIVIO PERSONALE</span><h2>' + esc(folderLabels[folder]) + '</h2><p>Carica qui i documenti che vuoi ritrovare da tutti i tuoi dispositivi autorizzati.</p></div></div>' +
       '<div class="wh-upload-row rosetta-upload-row"><label class="wh-upload-zone" for="sharedFile"><span class="wh-upload-icon">↑</span><span><strong>Scegli un file</strong><small id="sharedFileName">Nessun file selezionato</small></span></label><input id="sharedFile" type="file" />' +
       '<button class="button button-primary" type="button" data-file-action="upload">Conferma</button></div><p class="wh-error" id="sharedFileError" role="alert">' + esc(cache.error) + '</p></section>' +
       '<section class="wh-panel"><div class="wh-panel-heading"><div><span class="eyebrow">ARCHIVIO</span><h2>' + esc(folderLabels[folder]) + '</h2><p>' + cache.files.length + ' file, dal più recente al più vecchio.</p></div><button class="button button-primary" type="button" data-file-action="refresh"' + (cache.refresh && cache.refresh.running ? ' disabled' : '') + '>Aggiorna</button></div>' +

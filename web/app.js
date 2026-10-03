@@ -163,7 +163,7 @@ function renderCalendarPage() {
   const visibleDated = filteredTasks(allDated);
   const undated = filteredTasks(activities.filter((task) => !task.date));
   const viewMarkup = state.view === "month" ? renderMonthView(visibleDated) : state.view === "week" ? renderWeekView(visibleDated) : renderDayView(visibleDated);
-  return `${pageHeading("LAVORI E CANTIERI", "Calendario Operativo", "Pianificazione di officina, cantieri e clienti.", `Oggi · <strong>${esc(SHORT_DATE.format(today))}</strong>`)}
+  return `${pageHeading("AGENDA PERSONALE", "Lumen System", "Attività, scadenze e informazioni importanti in un unico spazio.", `Oggi · <strong>${esc(SHORT_DATE.format(today))}</strong>`)}
     ${statsMarkup()}
     <section class="calendar-layout" aria-label="Calendario e attività in sospeso">
       <div class="calendar-main">
