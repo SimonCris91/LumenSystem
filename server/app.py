@@ -189,13 +189,8 @@ class Store:
                     "INSERT OR IGNORE INTO people(id, display_name, active) VALUES (?, ?, 1)",
                     ("person-" + normalize(name).replace(" ", "-"), name),
                 )
-            for number in (1, 2, 3):
-                connection.execute(
-                    "INSERT OR IGNORE INTO vehicles(id,name,plate,notes,active,version,created_at,updated_at) VALUES(?,?,NULL,'',1,1,?,?)",
-                    (f"vehicle-{number}", f"Furgone {number}", now, now),
-                )
             connection.execute("UPDATE users SET status='approved' WHERE status IS NULL OR status='' ")
-            connection.execute("UPDATE users SET role='admin' WHERE login='simone'")
+            connection.execute("UPDATE users SET role='admin' WHERE login='admin'")
             connection.execute("PRAGMA user_version=3")
             connection.commit()
 
@@ -2107,7 +2102,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--db", type=Path, default=Path(os.getenv("LUMEN_DB", str(DEFAULT_DATA_DIR / "lumen-system.sqlite3"))))
     parser.add_argument("--web-root", type=Path, default=Path(os.getenv("LUMEN_WEB_ROOT", str(DEFAULT_WEB_ROOT))))
     parser.add_argument("--create-admin", action="store_true", help="crea un account locale e termina")
-    parser.add_argument("--login", default="simone", help="login per --create-admin")
+    parser.add_argument("--login", default="admin", help="login per --create-admin")
     parser.add_argument("--init", action="store_true", help="crea/aggiorna il database e termina")
     parser.add_argument("--skip-db-init", action="store_true", help="usa il database esistente senza inizializzarlo né modificarlo")
     return parser.parse_args()
