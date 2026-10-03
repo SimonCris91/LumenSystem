@@ -47,11 +47,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .team-person { display: flex; align-items: center; gap: 9px; width: 100%; padding: 7px 8px; border: 0; border-radius: 8px; background: transparent; color: #62645e; cursor: pointer; text-align: left; font-size: 11px; transition: background .15s; }
 .team-person:hover, .team-person.selected { background: #f0eee8; }
 .team-avatar, .person-avatar { display: grid; flex: 0 0 auto; place-items: center; width: 27px; height: 27px; border-radius: 50%; background: #eee9de; color: #665f50; font-size: 9px; font-weight: 700; }
-.team-person[data-name="Simone"] .team-avatar, .person-avatar[data-name="Simone"] { background: #f9e6da; color: #b75c34; }
-.team-person[data-name="Mamadou"] .team-avatar, .person-avatar[data-name="Mamadou"] { background: #e4eee8; color: #47765c; }
-.team-person[data-name="Roberto"] .team-avatar, .person-avatar[data-name="Roberto"] { background: #e7edf4; color: #54708f; }
-.team-person[data-name="Serena"] .team-avatar, .person-avatar[data-name="Serena"] { background: #f0e8f2; color: #805e87; }
-.team-person[data-name="Davide"] .team-avatar, .person-avatar[data-name="Davide"] { background: #f4ebd9; color: #8c7140; }
 .person-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sidebar-bottom { display: flex; gap: 10px; align-items: flex-start; margin-top: auto; padding: 15px 8px 4px; border-top: 1px solid var(--line); color: #787a72; }
 .save-dot, .live-dot { width: 7px; height: 7px; flex: 0 0 auto; margin-top: 4px; border-radius: 50%; background: #67a37d; box-shadow: 0 0 0 3px #e6f1e9; }
@@ -562,16 +557,6 @@ body[data-theme="dark"] .nav-link.active { background: #38271f; color: #efa17b; 
 body[data-theme="dark"] .nav-count { background: #293029; color: #c0c5bd; }
 body[data-theme="dark"] .nav-link.active .nav-count { background: #513427; color: #f2b99d; }
 body[data-theme="dark"] .team-person { color: #b0b6ad; }
-body[data-theme="dark"] .team-person[data-name="Simone"] .team-avatar,
-body[data-theme="dark"] .person-avatar[data-name="Simone"] { background: #493025; color: #f0ad8b; }
-body[data-theme="dark"] .team-person[data-name="Mamadou"] .team-avatar,
-body[data-theme="dark"] .person-avatar[data-name="Mamadou"] { background: #243a2c; color: #a2c8ad; }
-body[data-theme="dark"] .team-person[data-name="Roberto"] .team-avatar,
-body[data-theme="dark"] .person-avatar[data-name="Roberto"] { background: #263547; color: #b3c8e1; }
-body[data-theme="dark"] .team-person[data-name="Serena"] .team-avatar,
-body[data-theme="dark"] .person-avatar[data-name="Serena"] { background: #382b3c; color: #ceb4d4; }
-body[data-theme="dark"] .team-person[data-name="Davide"] .team-avatar,
-body[data-theme="dark"] .person-avatar[data-name="Davide"] { background: #413722; color: #e2cc91; }
 body[data-theme="dark"] .team-avatar,
 body[data-theme="dark"] .person-avatar { background: #30352f; color: #c3c7c0; }
 body[data-theme="dark"] .sidebar-bottom { color: #a3aaa1; border-color: #2d352e; }

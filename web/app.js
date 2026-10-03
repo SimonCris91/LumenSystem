@@ -257,7 +257,7 @@ function renderTeamPage() {
       const count = activities.filter((task) => task.people.includes(name)).length;
       return `<article class="member-card"><div class="member-head"><span class="person-avatar" data-name="${esc(name)}">${esc(initials(name))}</span><div><h3>${esc(name)}</h3><small>Responsabile attività</small></div></div><p class="member-count"><strong>${count}</strong> ${count === 1 ? "attività registrata" : "attività registrate"}</p><button class="member-open" data-action="person-filter" data-person="${esc(name)}">Mostra attività →</button></article>`;
     }).join("")}</div>
-    <p class="calendar-lower-note"><span>Davide è presente nell'elenco dei responsabili; nel resoconto iniziale non risultano attività assegnate.</span></p>`;
+    <p class="calendar-lower-note"><span>${PEOPLE.length ? "Il personale configurato può essere assegnato alle attività." : "Nessun membro del personale è stato ancora configurato."}</span></p>`;
 }
 
 function bindToolbarInputs() {
