@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f3ef" />
+    <meta name="description" content="Calendario operativo Lumen System: officina, cantieri e attività da programmare." />
+    <title>Calendario Operativo · Lumen System</title>
+    <link rel="canonical" href="/" />
+    <script>
+      if (window.location.search) window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20261001-3" />
+  </head>
+  <body data-theme="dark">
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navigazione principale">
+        <a class="brand" href="#calendario" aria-label="Lumen System, vai al calendario">
+          <img class="brand-mark brand-logo" src="assets/lumen-mark.svg" alt="Logo Lumen System: nucleo di luce" />
+          <span class="brand-copy"><strong>Lumen System</strong><small>CENTRO OPERATIVO</small></span>
+        </a>
+
+        <nav class="primary-nav" aria-label="Sezioni gestionali">
+          <label class="side-label" for="primaryNavigation">SEZIONI</label>
+          <select class="nav-select" id="primaryNavigation" aria-label="Seleziona una sezione">
+            <option value="calendar">Calendario</option>
+            <option value="backlog" id="backlogOption">Da programmare</option>
+            <option value="team">Squadra</option>
+            <option value="warehouse">Magazzino</option>
+            <option value="vehicles">Mezzi</option>
+            <option value="files">File condivisi</option>
+          </select>
+          <button class="nav-files-cta plasma-image-button" type="button" data-action="navigate" data-page="files" data-folder="rosetta" aria-label="Apri cartella Rosetta" title="File Rosetta"><img src="assets/file-plasma.jpeg" alt="Rosetta · taglio al plasma" /></button>
+          <button class="nav-files-cta plasma-image-button" type="button" data-action="navigate" data-page="files" data-folder="sketchup" aria-label="Apri cartella SketchUp" title="File SketchUp"><img src="assets/sketchup-logo.webp" alt="SketchUp Pro" /></button>
+        </nav>
+
+        <div class="sidebar-team-head"><span class="side-label">SQUADRA</span><span class="team-total">06</span></div>
+        <div class="team-list" id="sidebarTeam"></div>
+
+        <div class="sidebar-bottom">
+          <span class="save-dot" aria-hidden="true"></span>
+          <span><strong>Calendario e magazzino condivisi</strong><small>I dati confermati sono sul server Lumen System</small></span>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <div class="topbar-date"><span class="live-dot"></span><span id="todayLabel"></span></div>
+          <div class="topbar-actions">
+            <button class="icon-button theme-toggle" id="themeToggle" data-action="toggle-theme" type="button" aria-label="Passa al tema chiaro" title="Passa al tema chiaro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+            <button class="button button-quiet today-button" data-action="today">Oggi</button>
+            <button class="button button-primary" id="addTaskButton" data-action="add-task" aria-label="Nuova attività" title="Nuova attività">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Nuova attività</span>
+            </button>
+            <button class="button button-quiet" data-action="open-users" type="button" id="serverUsersButton" hidden>Utenti</button>
+            <button class="button button-quiet" data-action="server-logout" type="button" id="serverLogoutButton">Esci</button><span class="profile-mark" aria-label="Lumen System">LS</span>
+          </div>
+        </header>
+        <main class="page-content" id="appContent"></main>
+      </div>
+    </div>
+
+    <dialog class="task-dialog" id="taskDialog" aria-labelledby="dialogTitle">
+      <form id="taskForm" class="task-form">
+        <div class="dialog-topline"><div><span class="eyebrow">SCHEDA ATTIVITÀ</span><h2 id="dialogTitle">Nuova attività</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Chiudi">×</button></div>
+        <input type="hidden" id="taskId" />
+        <label class="field-label" for="taskTitle">Attività <span>*</span></label>
+        <input class="text-input" id="taskTitle" name="title" maxlength="120" placeholder="Es. Modifica cover condizionatore" required />
+        <div class="form-two-col">
+          <div><label class="field-label" for="taskDate">Data <small>facoltativa</small></label><input class="text-input" id="taskDate" name="date" type="date" /></div>
+          <div><label class="field-label" for="taskPlace">Cantiere / luogo</label><input class="text-input" id="taskPlace" name="place" maxlength="100" placeholder="Officina o cliente" /></div>
+        </div>
+        <label class="field-label" for="taskStatus">Stato</label>
+        <select class="text-input" id="taskStatus" name="status">
+          <option value="in_sospeso">In sospeso</option>
+          <option value="programmata">Programmata</option>
+          <option value="in_corso">In corso</option>
+          <option value="completata">Completata</option>
+        </select>
+        <fieldset class="people-field"><legend class="field-label">Responsabili</legend><div class="people-options" id="peopleOptions"></div></fieldset>
+        <label class="field-label" for="taskNotes">Note</label>
+        <textarea class="text-input notes-input" id="taskNotes" name="notes" rows="3" maxlength="700" placeholder="Dettagli utili per il lavoro"></textarea>
+        <div class="dialog-actions"><button class="button button-danger hidden" type="button" id="deleteTask" data-action="delete-task">Elimina</button><span class="dialog-spacer"></span><button class="button button-quiet" type="button" data-action="close-dialog">Annulla</button><button class="button button-primary" type="submit">Salva attività</button></div>
+      </form>
+    </dialog>
+    <dialog class="task-dialog server-login-dialog" id="serverLoginDialog" aria-labelledby="serverLoginTitle">
+      <form id="serverLoginForm" class="task-form">
+        <div class="dialog-topline"><div><span class="eyebrow">SERVER LUMEN SYSTEM</span><h2 id="serverLoginTitle">Accedi al calendario centrale</h2></div></div>
+        <p class="page-subtitle">I dati verranno letti dal PC dell’officina. La password resta nel server e non viene salvata nel browser.</p>
+        <label class="field-label" for="serverLoginUser">Utente</label>
+        <input class="text-input" id="serverLoginUser" name="login" autocomplete="username" required />
+        <label class="field-label" for="serverLoginPassword">Password</label>
+        <input class="text-input" id="serverLoginPassword" name="password" type="password" autocomplete="current-password" required />
+        <p class="wh-error" id="serverLoginError" role="alert"></p>
+        <div class="dialog-actions"><button class="button button-quiet" type="button" data-action="open-register">Crea profilo</button><span class="dialog-spacer"></span><button class="button button-primary" type="submit">Accedi</button></div>
+      </form>
+    </dialog>
+    <dialog class="task-dialog server-login-dialog" id="registrationDialog" aria-labelledby="registrationTitle">
+      <form id="registrationForm" class="task-form">
+        <div class="dialog-topline"><div><span class="eyebrow">NUOVO UTENTE</span><h2 id="registrationTitle">Crea profilo Lumen System</h2></div><button class="icon-button" type="button" data-action="close-register" aria-label="Chiudi">×</button></div>
+        <p class="page-subtitle">Il profilo verrà attivato dopo l’approvazione di Simone.</p>
+        <label class="field-label" for="registrationName">Nome e cognome</label>
+        <input class="text-input" id="registrationName" name="display_name" autocomplete="name" maxlength="100" required />
+        <label class="field-label" for="registrationUser">Nome utente</label>
+        <input class="text-input" id="registrationUser" name="login" autocomplete="username" maxlength="64" required />
+        <label class="field-label" for="registrationPassword">Password</label>
+        <input class="text-input" id="registrationPassword" name="password" type="password" autocomplete="new-password" minlength="10" required />
+        <p class="wh-error" id="registrationError" role="alert"></p>
+        <div class="dialog-actions"><button class="button button-quiet" type="button" data-action="close-register">Annulla</button><span class="dialog-spacer"></span><button class="button button-primary" type="submit">Invia richiesta</button></div>
+      </form>
+    </dialog>
+    <dialog class="task-dialog server-login-dialog" id="adminUsersDialog" aria-labelledby="adminUsersTitle">
+      <form id="adminUsersForm" class="task-form">
+        <div class="dialog-topline"><div><span class="eyebrow">AMMINISTRAZIONE</span><h2 id="adminUsersTitle">Profili utenti</h2></div><button class="icon-button" type="button" data-action="close-users" aria-label="Chiudi">×</button></div>
+        <p class="page-subtitle">Approva o rifiuta le richieste di accesso al server.</p>
+        <div id="adminUsersList" class="admin-users-list"></div>
+        <p class="wh-error" id="adminUsersError" role="alert"></p>
+        <div class="dialog-actions"><span class="dialog-spacer"></span><button class="button button-quiet" type="button" data-action="close-users">Chiudi</button></div>
+      </form>
+    </dialog>
+    <script src="app.js?v=25" defer></script>
+    <script src="document-reader.js?v=20260930-3" defer></script>
+    <script src="warehouse.js?v=20260930-5" defer></script>
+    <script src="vehicles.js?v=2" defer></script>
+    <script src="files.js?v=20261003-1" defer></script>
+    <script src="server-client.js?v=22" defer></script>
+  </body>
+</html>
+
