@@ -1,0 +1,15 @@
+.env
+.env.local
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+server/data/
+artifacts/server-releases/
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.backup
+*.token
+*token*.txt

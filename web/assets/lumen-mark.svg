@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Lumen System</title>
+  <desc id="desc">Un nucleo di luce circondato da una costellazione.</desc>
+  <defs>
+    <radialGradient id="orb" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#fff7c7"/>
+      <stop offset=".3" stop-color="#ffd77b"/>
+      <stop offset=".68" stop-color="#9a6cff"/>
+      <stop offset="1" stop-color="#32235e"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9db83"/>
+      <stop offset=".5" stop-color="#9b7cff"/>
+      <stop offset="1" stop-color="#59d5ff"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="80" cy="80" r="66" fill="#111421"/>
+  <g fill="none" stroke="url(#ring)" opacity=".85">
+    <ellipse cx="80" cy="80" rx="55" ry="23" transform="rotate(-28 80 80)"/>
+    <ellipse cx="80" cy="80" rx="55" ry="23" transform="rotate(32 80 80)"/>
+  </g>
+  <circle cx="80" cy="80" r="31" fill="url(#orb)" filter="url(#glow)"/>
+  <path d="M80 48 86 72 110 80 86 88 80 112 74 88 50 80 74 72Z" fill="#fffbe2" opacity=".92"/>
+  <g fill="#fff4bf">
+    <circle cx="37" cy="53" r="2"/><circle cx="123" cy="47" r="2"/><circle cx="125" cy="111" r="2"/><circle cx="41" cy="116" r="1.7"/>
+  </g>
+</svg>
