@@ -137,7 +137,7 @@ function statsMarkup() {
   return '<div class="stats-row">' +
     '<div class="stat-card"><div><div class="stat-label">Attività del ' + esc(dateLabel) + '</div><div class="stat-value">' + datedCount + '</div></div><span class="stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span></div>' +
     '<div class="stat-card"><div><div class="stat-label">Attività da programmare</div><div class="stat-value">' + backlog + '</div></div><span class="stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v5l3 2M20 12a8 8 0 1 1-2.34-5.66"/></svg></span></div>' +
-    '<div class="stat-card"><div><div class="stat-label">Responsabili</div><div class="stat-value">' + PEOPLE.length + '</div></div><span class="stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 19v-1.2A4.8 4.8 0 0 1 8.3 13h1.4a4.8 4.8 0 0 1 4.8 4.8V19zM16 5.3a3 3 0 0 1 0 5.8m1.2 2.1a4.6 4.6 0 0 1 3.3 4.4V19h-3"/></svg></span></div>' +
+    '<div class="stat-card"><div><div class="stat-label">Persone</div><div class="stat-value">' + PEOPLE.length + '</div></div><span class="stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 19v-1.2A4.8 4.8 0 0 1 8.3 13h1.4a4.8 4.8 0 0 1 4.8 4.8V19zM16 5.3a3 3 0 0 1 0 5.8m1.2 2.1a4.6 4.6 0 0 1 3.3 4.4V19h-3"/></svg></span></div>' +
   '</div>';
 }
 
@@ -252,7 +252,7 @@ function taskCardMarkup(task) {
 }
 
 function renderTeamPage() {
-  return `${pageHeading("PERSONE", "Squadra", "Responsabili disponibili per le attività del calendario.", `${PEOPLE.length} persone`)}
+  return `${pageHeading("PERSONE", "Famiglia", "Le persone di casa e le attività che condividete.", `${PEOPLE.length} persone`)}
     <div class="team-grid">${PEOPLE.map((name) => {
       const count = activities.filter((task) => task.people.includes(name)).length;
       return `<article class="member-card"><div class="member-head"><span class="person-avatar" data-name="${esc(name)}">${esc(initials(name))}</span><div><h3>${esc(name)}</h3><small>Responsabile attività</small></div></div><p class="member-count"><strong>${count}</strong> ${count === 1 ? "attività registrata" : "attività registrate"}</p><button class="member-open" data-action="person-filter" data-person="${esc(name)}">Mostra attività →</button></article>`;

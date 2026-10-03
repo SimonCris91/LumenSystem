@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f4f3ef" />
     <meta name="description" content="Lumen System: agenda personale, attività, scadenze e informazioni importanti." />
-    <title>Calendario Operativo · Lumen System</title>
+    <title>Calendario personale · Lumen System</title>
     <link rel="canonical" href="/" />
     <script>
       if (window.location.search) window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261001-3" />
+    <link rel="stylesheet" href="styles.css?v=20261003-2" />
   </head>
   <body data-theme="dark">
     <div class="app-shell">
@@ -25,10 +25,10 @@
           <select class="nav-select" id="primaryNavigation" aria-label="Seleziona una sezione">
             <option value="calendar">Calendario</option>
             <option value="backlog" id="backlogOption">Da programmare</option>
-            <option value="team">Squadra</option>
-            <option value="warehouse">Magazzino</option>
-            <option value="vehicles">Mezzi</option>
-            <option value="files">File condivisi</option>
+            <option value="team">Famiglia</option>
+            <option value="warehouse">Spesa</option>
+            <option value="vehicles">Mezzi di casa</option>
+            <option value="files">Documenti condivisi</option>
           </select>
         </nav>
 
@@ -62,7 +62,7 @@
       <form id="taskForm" class="task-form">
         <div class="dialog-topline"><div><span class="eyebrow">SCHEDA ATTIVITÀ</span><h2 id="dialogTitle">Nuova attività</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Chiudi">×</button></div>
         <input type="hidden" id="taskId" />
-        <label class="field-label" for="taskTitle">Attività <span>*</span></label>
+        <label class="field-label" for="taskTitle">Attività personale <span>*</span></label>
         <input class="text-input" id="taskTitle" name="title" maxlength="120" placeholder="Es. Modifica cover condizionatore" required />
         <div class="form-two-col">
           <div><label class="field-label" for="taskDate">Data <small>facoltativa</small></label><input class="text-input" id="taskDate" name="date" type="date" /></div>
@@ -75,7 +75,7 @@
           <option value="in_corso">In corso</option>
           <option value="completata">Completata</option>
         </select>
-        <fieldset class="people-field"><legend class="field-label">Responsabili</legend><div class="people-options" id="peopleOptions"></div></fieldset>
+        <fieldset class="people-field"><legend class="field-label">Persone coinvolte</legend><div class="people-options" id="peopleOptions"></div></fieldset>
         <label class="field-label" for="taskNotes">Note</label>
         <textarea class="text-input notes-input" id="taskNotes" name="notes" rows="3" maxlength="700" placeholder="Dettagli utili per il lavoro"></textarea>
         <div class="dialog-actions"><button class="button button-danger hidden" type="button" id="deleteTask" data-action="delete-task">Elimina</button><span class="dialog-spacer"></span><button class="button button-quiet" type="button" data-action="close-dialog">Annulla</button><button class="button button-primary" type="submit">Salva attività</button></div>
@@ -116,11 +116,11 @@
         <div class="dialog-actions"><span class="dialog-spacer"></span><button class="button button-quiet" type="button" data-action="close-users">Chiudi</button></div>
       </form>
     </dialog>
-    <script src="app.js?v=25" defer></script>
+    <script src="app.js?v=26" defer></script>
     <script src="document-reader.js?v=20260930-3" defer></script>
     <script src="warehouse.js?v=20260930-5" defer></script>
     <script src="vehicles.js?v=2" defer></script>
-    <script src="files.js?v=20261003-1" defer></script>
+    <script src="files.js?v=20261003-2" defer></script>
     <script src="server-client.js?v=22" defer></script>
   </body>
 </html>
