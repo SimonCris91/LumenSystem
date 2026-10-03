@@ -57,14 +57,14 @@
 
   function renderFilesPage() {
     if (!active()) {
-      return '<div class="page-heading"><div><span class="eyebrow">ARCHIVIO CONDIVISO</span><h1>File condivisi</h1><p class="page-subtitle">Accedi al server Lumen System per caricare e scaricare i file dell’officina.</p></div></div>' +
+      return '<div class="page-heading"><div><span class="eyebrow">DOCUMENTI CONDIVISI</span><h1>Documenti condivisi</h1><p class="page-subtitle">Accedi al server Lumen System per caricare e ritrovare i tuoi documenti.</p></div></div>' +
         '<section class="wh-panel"><div class="wh-notice"><strong>Server non collegato.</strong> Apri l’indirizzo del server e accedi prima di usare l’archivio condiviso.</div></section>';
     }
     var folderLabels = { all: "Tutti i file" };
     var folder = folderLabels[cache.folder] ? cache.folder : "all";
     var emptyLabels = { all: "Nessun file condiviso." };
     var rows = renderFileRows(cache.files, emptyLabels[folder]);
-    return '<div class="page-heading"><div><span class="eyebrow">ARCHIVIO CONDIVISO</span><h1>File condivisi</h1><p class="page-subtitle">Carica e scarica documenti accessibili ai dispositivi autorizzati.</p></div></div>' +
+    return '<div class="page-heading"><div><span class="eyebrow">DOCUMENTI CONDIVISI</span><h1>Documenti condivisi</h1><p class="page-subtitle">Carica e ritrova documenti accessibili dai tuoi dispositivi autorizzati.</p></div></div>' +
       '' +
       '<section class="wh-panel rosetta-upload-panel"><div class="wh-panel-heading"><div><span class="eyebrow">ARCHIVIO PERSONALE</span><h2>' + esc(folderLabels[folder]) + '</h2><p>Carica qui i documenti che vuoi ritrovare da tutti i tuoi dispositivi autorizzati.</p></div></div>' +
       '<div class="wh-upload-row rosetta-upload-row"><label class="wh-upload-zone" for="sharedFile"><span class="wh-upload-icon">↑</span><span><strong>Scegli un file</strong><small id="sharedFileName">Nessun file selezionato</small></span></label><input id="sharedFile" type="file" />' +
