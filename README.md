@@ -8,7 +8,14 @@ Questa copia è stata creata come progetto indipendente. Parte senza attività, 
 
 - `web/`: interfaccia responsive con il tema visivo Lumen.
 - `server/`: API Python standard library e schema SQLite.
+- `web/modules.js`: registry visuale dell'ecosistema Personal AI; coordina i progetti senza importare i loro repository, database o credenziali.
 - `.env.example`: configurazione di esempio; non contiene segreti.
+
+## Ecosistema Personal AI
+
+La sezione **Ecosistema AI** del gestionale raccoglie i moduli specialistici di Lumen, Account Finder, NEXUS, AEGIS, AI Remote, Signum Aura, Yachting Agent AI, Numeri Lab AI, Inbox personale e SimonCris Content. Il registry è descrittivo e privacy-first: indica skill, perimetro e modalità d'accesso, ma non copia dati personali, token o database nei progetti collegati.
+
+Il routing operativo resta separato: Account Finder produce indizi, l'Inbox classifica le fonti, NEXUS organizza il contesto e Lumen mostra calendario, scadenze e attività. Mutazioni esterne, ordini, email e pagamenti richiedono sempre il rispettivo gate del progetto.
 
 ## Avvio locale
 
