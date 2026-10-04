@@ -2,6 +2,7 @@
   "use strict";
 
   const modules = [
+    { id: "aquarius-age", name: "Aquarius Age", kind: "Portfolio", state: "modulo", description: "Portfolio centrale di Simone Feo per presentare prodotti digitali, applicazioni e progetti senza esporre dati operativi.", owner: "aquarius-age-delivery" },
     { id: "aegis", name: "AEGIS Invest AI", kind: "Finanza Demo", state: "isolato", description: "Dashboard Demo-first per stato portafoglio, scanner, rischio e risultati verificati. Nessun accesso Real.", owner: "aegis-engineering" },
     { id: "account-finder", name: "Account Finder", kind: "Privacy e account", state: "browser-local", description: "Raccoglie indizi di portali collegati alle email senza trasformare un indizio in prova e senza conservare credenziali.", owner: "account-finder-privacy" },
     { id: "inbox", name: "Inbox personale", kind: "Email e scadenze", state: "read-only", description: "Classifica email, bollette, fatture, avvisi e notifiche; prepara scadenze e riepiloghi senza inviare o pagare automaticamente.", owner: "personal-inbox-operations" },
@@ -11,6 +12,8 @@
     { id: "yachting", name: "Yachting Agent AI", kind: "Nautica", state: "modulo", description: "Agente nautico intelligente per percorsi, servizi e contenuti della Costa Smeralda.", owner: "olbia-yachting-delivery" },
     { id: "numeri", name: "Numeri Lab AI", kind: "Ricerca dati", state: "modulo", description: "Analisi statistiche trasparenti di Lotto e SuperEnalotto con storico e test prospettici separati da promesse di previsione.", owner: "superenalotto-research" },
     { id: "simoncris", name: "SimonCris Content", kind: "Contenuti", state: "modulo", description: "Coordina musica, gaming e contenuti del brand SimonCris con tracciamento delle decisioni.", owner: "simoncris-content" },
+    { id: "lavormetal", name: "LavorMetal Operations", kind: "Operazioni", state: "isolato", description: "Skill operativa separata per attività d'officina e centro operativo; Lumen coordina soltanto riferimenti, senza importare dati o database.", owner: "lavormetal-operations" },
+    { id: "personal-operations", name: "Personal Operations", kind: "Decisioni", state: "modulo", description: "Priorità, decisioni, scadenze e follow-up personali con evidenze e stato verificabile.", owner: "personal-operations" },
     { id: "lumen", name: "Lumen System", kind: "Centro operativo", state: "attivo", description: "Questo gestionale: calendario, attività, documenti, magazzino, mezzi e routing dell'ecosistema.", owner: "lumen-system" },
   ];
 
