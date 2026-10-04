@@ -121,6 +121,7 @@ function render() {
   else if (state.page === "warehouse") content.innerHTML = renderWarehousePage();
   else if (state.page === "vehicles") content.innerHTML = window.renderVehiclesPage?.() || "";
   else if (state.page === "files") content.innerHTML = window.renderFilesPage?.() || "";
+  else if (state.page === "ecosystem") content.innerHTML = window.renderModulesPage?.() || "";
   else content.innerHTML = renderCalendarPage();
   $("#addTaskButton").classList.toggle("hidden", state.page !== "calendar");
   bindToolbarInputs();
