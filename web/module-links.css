@@ -1,0 +1,5 @@
+.module-link{color:#7956bd;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap}
+.module-link:hover{text-decoration:underline}
+.module-link.muted{color:var(--muted,#7a837a);font-weight:500}
+body[data-theme="dark"] .module-link{color:#b99eff}
+body[data-theme="dark"] .module-link.muted{color:#899489}
