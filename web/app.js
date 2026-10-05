@@ -1,4 +1,4 @@
-const PEOPLE = [];
+const PEOPLE = ["Simone", "Francesca", "Gioia"];
 const STORAGE_KEY = "lumen-system-calendario-operativo-v1";
 const SEED_VERSION_KEY = "lumen-system-calendario-seed-version";
 const SEED_VERSION = "5";

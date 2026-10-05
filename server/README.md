@@ -36,16 +36,23 @@ verificare il gate reale e un secondo turno per la ripresa del thread.
 ### Scontrini per Spesa locale
 
 Ollama portatile risiede in `D:\CodexTools\Ollama`; modelli e file temporanei
-sono mantenuti sul disco D. Avvio e download del modello visuale:
+sono mantenuti sul disco D. Il modello visuale legge scontrini e immagini di
+volantini in locale:
 
 ```powershell
 & 'D:\Codex\LumenSystem\server\windows\start-shopping-ollama.ps1' -PullModel
 ```
 
-Spesa locale accetta foto JPEG/PNG/WEBP fino a 20 MB tramite l'API autenticata
-`POST /api/v1/shopping/receipt`. Il server usa il modello visuale locale;
-l'immagine non viene archiviata. I prodotti estratti compaiono in una bozza
-modificabile e si aggiungono al carrello con un pulsante. Il carrello demo
+Spesa locale accetta foto JPEG/PNG/WEBP fino a 20 MB tramite le API autenticate
+`POST /api/v1/shopping/receipt` e `POST /api/v1/shopping/flyer`. Per leggere un
+volantino, l'utente carica una foto o uno screenshot nitido della pagina
+ufficiale; il server usa il modello visuale locale e non archivia l'immagine.
+I prezzi semplici estratti diventano offerte `da_verificare`; un operatore le
+confronta con il volantino e le conferma con `POST
+/api/v1/shopping/offers/{id}/verify`. Solo offerte confermate e con date valide
+entrano nel confronto. Ollama non può confermare un prezzo da solo. Per gli
+scontrini, i prodotti estratti compaiono in una bozza modificabile e si
+aggiungono al carrello con un pulsante. Il carrello demo
 comprende due adulti e una bimba; le quantità indicano confezioni e non
 costituiscono un piano alimentare. La comparazione usa soltanto offerte
 verificate, con date valide e descrizione/confezione corrispondenti.

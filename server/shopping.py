@@ -158,9 +158,12 @@ def list_source_documents(store: Any) -> list[dict[str, Any]]:
     return store.rows("SELECT d.*, s.name AS store_name FROM shopping_source_documents d JOIN shopping_stores s ON s.id=d.store_id ORDER BY d.discovered_at DESC, s.name LIMIT 200")
 
 
-def list_offers(store: Any, *, store_id: str = "", text: str = "") -> list[dict[str, Any]]:
+def list_offers(store: Any, *, store_id: str = "", text: str = "", status: str = "") -> list[dict[str, Any]]:
     where = ["o.status IN ('verificata','da_verificare')"]
     params: list[Any] = []
+    if status in {"verificata", "da_verificare"}:
+        where.append("o.status=?")
+        params.append(status)
     if store_id:
         where.append("o.store_id=?")
         params.append(store_id)
@@ -168,9 +171,10 @@ def list_offers(store: Any, *, store_id: str = "", text: str = "") -> list[dict[
         where.append("(o.normalized_name LIKE ? OR o.product_name LIKE ?)")
         needle = "%" + normalize(text) + "%"
         params.extend([needle, needle])
-    today = date.today().isoformat()
-    where.extend(["(o.valid_from='' OR o.valid_from<=?)", "(o.valid_to='' OR o.valid_to>=?)"])
-    params.extend([today, today])
+    if status != "da_verificare":
+        today = date.today().isoformat()
+        where.extend(["(o.valid_from='' OR o.valid_from<=?)", "(o.valid_to='' OR o.valid_to>=?)"])
+        params.extend([today, today])
     rows = store.rows(
         "SELECT o.*, s.name AS store_name FROM shopping_offers o JOIN shopping_stores s ON s.id=o.store_id WHERE " +
         " AND ".join(where) + " ORDER BY o.valid_to, o.product_name LIMIT 300",
@@ -211,6 +215,23 @@ def create_offer(store: Any, data: dict[str, Any]) -> dict[str, Any]:
              str(data.get("status") or "da_verificare") if data.get("status") in {"verificata", "da_verificare"} else "da_verificare",
              str(data.get("confidence") or "media")[:30], fingerprint, timestamp, timestamp),
         )
+    return store.row("SELECT o.*, s.name AS store_name FROM shopping_offers o JOIN shopping_stores s ON s.id=o.store_id WHERE o.id=?", (offer_id,)) or {}
+
+
+def verify_offer(store: Any, offer_id: str) -> dict[str, Any]:
+    row = store.row("SELECT * FROM shopping_offers WHERE id=?", (offer_id,))
+    if not row:
+        raise ValueError("Offerta non trovata")
+    try:
+        valid_from = date.fromisoformat(row["valid_from"])
+        valid_to = date.fromisoformat(row["valid_to"])
+    except (TypeError, ValueError) as exc:
+        raise ValueError("L'offerta non ha date di validità verificabili") from exc
+    if valid_from > valid_to or valid_to < date.today():
+        raise ValueError("Il periodo dell'offerta è scaduto o non valido")
+    checked_at = now()
+    with store.lock, store.connect() as connection:
+        connection.execute("UPDATE shopping_offers SET status='verificata', confidence='verificata manualmente', updated_at=? WHERE id=?", (checked_at, offer_id))
     return store.row("SELECT o.*, s.name AS store_name FROM shopping_offers o JOIN shopping_stores s ON s.id=o.store_id WHERE o.id=?", (offer_id,)) or {}
 
 
