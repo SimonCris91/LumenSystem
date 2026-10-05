@@ -1,10 +1,62 @@
 # Server locale Lumen System
 
-Questo è il componente eseguibile del server che viene installato sul PC dell'officina. Il server può servire anche la copia locale dell'interfaccia in `C:\LumenSystem\web`; il sito pubblico Sites resta separato finché non viene completata la migrazione.
+Questo è il componente eseguibile del server che viene installato sul PC dell'officina. Il server può servire anche la copia locale dell'interfaccia in `D:\Codex\LumenSystem\web`; il sito pubblico Sites resta separato finché non viene completata la migrazione.
 
 ## Avvio sul PC dell'officina
 
+### Controller Codex multi-progetto
+
+La sezione Controller Codex usa un processo persistente `codex app-server`
+con trasporto stdio. Il backend richiede il ruolo amministratore (oppure il
+token server di bootstrap), mantiene thread, stato ed eventi in SQLite e
+consente un lavoro per volta. I checkout sono configurati in
+`server/codex_controller.py`, esclusivamente su D; i moduli senza checkout
+sono visibili ma disabilitati. `CODEX_BINARY` può indicare il binario locale.
+
+Rotte: `GET /api/v1/controller/status`, `POST /api/v1/controller/connect`,
+`POST /api/v1/controller/start`, `POST /api/v1/controller/decide`
+e `POST /api/v1/controller/interrupt`.
+La modalità analisi usa sandbox read-only. La modalità modifiche mantiene
+la stessa sandbox, ma presenta le richieste reali di modifica file con diff
+e decisione singola accept/decline. Percorsi esterni, file riservati,
+richieste senza diff e comandi con elevazione vengono rifiutati. Non espone
+un proxy RPC generico. I turni usano l'autenticazione Codex locale e possono consumare
+la quota dell'account; la verifica connessione non avvia un turno AI.
+Al riavvio del server i lavori ancora in corso sono marcati interrupted;
+non vengono ripetuti automaticamente e le approvazioni pendenti scadono.
+Il pulsante Continua questo thread riprende il thread salvato nello stesso
+progetto; la nuova istruzione crea una nuova voce nella cronologia. Lo stato
+dei lavori precedenti resta invariato. Nessuna approvazione vale per una sessione intera.
+
+Test: `py -3 -m unittest discover -s server/tests -p test_controller_approvals.py`.
+La prova opzionale `server/tests/controller_live_probe.py` usa un fixture
+isolato in `D:\CodexTools\controller-probe`, consuma un turno Codex per
+verificare il gate reale e un secondo turno per la ripresa del thread.
+
+### Scontrini per Spesa locale
+
+Ollama portatile risiede in `D:\CodexTools\Ollama`; modelli e file temporanei
+sono mantenuti sul disco D. Avvio e download del modello visuale:
+
+```powershell
+& 'D:\Codex\LumenSystem\server\windows\start-shopping-ollama.ps1' -PullModel
+```
+
+Spesa locale accetta foto JPEG/PNG/WEBP fino a 20 MB tramite l'API autenticata
+`POST /api/v1/shopping/receipt`. Il server usa il modello visuale locale;
+l'immagine non viene archiviata. I prodotti estratti compaiono in una bozza
+modificabile e si aggiungono al carrello con un pulsante. Il carrello demo
+comprende due adulti e una bimba; le quantità indicano confezioni e non
+costituiscono un piano alimentare. La comparazione usa soltanto offerte
+verificate, con date valide e descrizione/confezione corrispondenti.
+
 Serve Python 3.11 o successivo. Il server usa solo librerie standard.
+
+### Radar AI e monitoraggio attivo
+
+Radar AI controlla in background le fonti ufficiali OpenAI, Anthropic, Cloudflare, GitHub e Google. Il controllo è silenzioso e usa richieste condizionali quando la fonte le supporta; non è un job dichiarato come "ogni ora" e non esegue deploy, installazioni, DNS, email o altre mutazioni esterne. Le notizie ricevute restano `da_verificare` finché un operatore non le esamina.
+
+`RADAR_POLL_SECONDS` configura il controllo tecnico minimo (predefinito 300 secondi); il costo previsto della raccolta è quello delle richieste HTTP alle fonti ufficiali, senza chiamate a modelli o token AI.
 
 PowerShell:
 
@@ -17,39 +69,39 @@ python server\app.py
 La prima volta crea l'account centrale senza scrivere la password nella riga di comando:
 
 ```powershell
-py -3 C:\LumenSystem\server\app.py --db C:\LumenSystem\data\lumen-system.sqlite3 --create-admin --login simone
+py -3 D:\Codex\LumenSystem\server\app.py --db D:\Codex\LumenSystem\data\lumen-system.sqlite3 --create-admin --login simone
 ```
 
 Il comando chiede la password due volte. Non usare il PIN di Windows e non riportare la password nella chat.
 
 ### Avvio automatico e gestione manuale su Windows
 
-Per installare l'avvio automatico **sul PC che ospita davvero `C:\LumenSystem`**, apri PowerShell come amministratore ed esegui:
+Per installare l'avvio automatico **sul PC che ospita davvero `D:\Codex\LumenSystem`**, apri PowerShell come amministratore ed esegui:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
-& 'C:\LumenSystem\server\windows\install-service.ps1'
+& 'D:\Codex\LumenSystem\server\windows\install-service.ps1'
 ```
 
-Lo script verifica Python 3.11+, interfaccia web e token in `C:\LumenSystem\.env`, poi registra nell'Utilità di pianificazione l'attività `LumenSystem Calendar Server`, avviata a ogni boot come `SYSTEM`. Usa il database `C:\LumenSystem\data\lumen-system.sqlite3`; non tocca dati esistenti. Il PC deve essere acceso e Windows deve completare l'avvio. Per avviarlo subito senza riavviare:
+Lo script verifica Python 3.11+, interfaccia web e token in `D:\Codex\LumenSystem\.env`, poi registra nell'Utilità di pianificazione l'attività `LumenSystem Calendar Server`, avviata a ogni boot come `SYSTEM`. Usa il database `D:\Codex\LumenSystem\data\lumen-system.sqlite3`; non tocca dati esistenti. Il PC deve essere acceso e Windows deve completare l'avvio. Per avviarlo subito senza riavviare:
 
 ```powershell
-& 'C:\LumenSystem\server\windows\manage-service.ps1' -Action Start
+& 'D:\Codex\LumenSystem\server\windows\manage-service.ps1' -Action Start
 ```
 
 Le altre operazioni manuali sono `-Action Stop`, `Restart`, `Status` e `Uninstall`. Per stato e salute API:
 
 ```powershell
-& 'C:\LumenSystem\server\windows\manage-service.ps1' -Action Status
+& 'D:\Codex\LumenSystem\server\windows\manage-service.ps1' -Action Status
 ```
 
-È disponibile anche il pannello grafico `C:\LumenSystem\Lumen System-Calendar.exe`: apre il calendario e offre i pulsanti **Avvia**, **Ferma**, **Riavvia** e **Installa avvio Windows**. Le operazioni amministrative mostrano la richiesta UAC di Windows. Per ricreare il piccolo eseguibile dal sorgente con il compilatore .NET già incluso in Windows:
+È disponibile anche il pannello grafico `D:\Codex\LumenSystem\Lumen System-Calendar.exe`: apre il calendario e offre i pulsanti **Avvia**, **Ferma**, **Riavvia** e **Installa avvio Windows**. Le operazioni amministrative mostrano la richiesta UAC di Windows. Per ricreare il piccolo eseguibile dal sorgente con il compilatore .NET già incluso in Windows:
 
 ```powershell
-& 'C:\LumenSystem\server\windows\build-manager.ps1' -OutputPath 'C:\LumenSystem\Lumen System-Calendar.exe'
+& 'D:\Codex\LumenSystem\server\windows\build-manager.ps1' -OutputPath 'D:\Codex\LumenSystem\Lumen System-Calendar.exe'
 ```
 
-L'attività avvia API e interfaccia del calendario sulla porta 8787. Il tunnel HTTPS o l'accesso dalla rete esterna sono componenti separati: per dispositivi fuori dal PC devono essere già configurati e avviati separatamente. Ollama serve solo alla lettura AI dei documenti di magazzino, non al calendario.
+L'attività avvia API e interfaccia del calendario sulla porta 8789. Il tunnel HTTPS o l'accesso dalla rete esterna sono componenti separati: per dispositivi fuori dal PC devono essere già configurati e avviati separatamente. Ollama serve solo alla lettura AI dei documenti di magazzino, non al calendario.
 
 Per un PC dell'officina il bind predefinito `127.0.0.1` è intenzionale. Impostare `LUMEN_BIND=0.0.0.0` solo quando sarà stato definito un firewall e un reverse proxy/tunnel. Non aprire mai la porta SQLite o la porta API direttamente su Internet.
 
@@ -57,7 +109,7 @@ Variabili:
 
 - `LUMEN_API_TOKEN`: token temporaneo di bootstrap per le chiamate API.
 - `LUMEN_DB`: percorso del file SQLite (predefinito `server/data/lumen-system.sqlite3`).
-- `LUMEN_PORT`: porta API (predefinita `8787`).
+- `LUMEN_PORT`: porta API (predefinita `8789`).
 - `LUMEN_ALLOWED_ORIGIN`: origine web autorizzata per CORS; lasciarla vuota finché sito e API non condividono un dominio controllato.
 - `LUMEN_WA_WABA_ID`, `LUMEN_WA_PHONE_NUMBER_ID`, `LUMEN_WA_BUSINESS_ID`, `LUMEN_WA_APP_ID`: identificativi Meta.
 - `LUMEN_WA_ACCESS_TOKEN`: token Cloud API, solo nell'ambiente server.

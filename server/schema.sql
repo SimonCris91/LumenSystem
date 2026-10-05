@@ -187,3 +187,115 @@ CREATE TABLE IF NOT EXISTS whatsapp_messages (
   created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS whatsapp_messages_conversation_idx ON whatsapp_messages(conversation_id,timestamp,id);
+
+-- Radar AI keeps source material and review state separate from operational data.
+CREATE TABLE IF NOT EXISTS radar_sources (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  url TEXT NOT NULL UNIQUE,
+  source_type TEXT NOT NULL CHECK (source_type IN ('rss', 'html')),
+  category TEXT NOT NULL,
+  projects_json TEXT NOT NULL DEFAULT '[]',
+  skill TEXT NOT NULL DEFAULT '',
+  active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
+  last_checked_at TEXT,
+  last_success_at TEXT,
+  last_error TEXT NOT NULL DEFAULT '',
+  etag TEXT NOT NULL DEFAULT '',
+  last_modified TEXT NOT NULL DEFAULT '',
+  last_new_items INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS radar_items (
+  id TEXT PRIMARY KEY,
+  source_id TEXT NOT NULL REFERENCES radar_sources(id),
+  source_name TEXT NOT NULL,
+  title TEXT NOT NULL,
+  url TEXT NOT NULL,
+  published_at TEXT NOT NULL DEFAULT '',
+  received_at TEXT NOT NULL,
+  verified_at TEXT,
+  category TEXT NOT NULL,
+  projects_json TEXT NOT NULL DEFAULT '[]',
+  skill TEXT NOT NULL DEFAULT '',
+  verification_status TEXT NOT NULL DEFAULT 'da_verificare' CHECK (verification_status IN ('verificata', 'da_verificare', 'non_confermata', 'obsoleta')),
+  summary TEXT NOT NULL DEFAULT '',
+  impact TEXT NOT NULL DEFAULT '',
+  risk TEXT NOT NULL DEFAULT '',
+  cost_dependency TEXT NOT NULL DEFAULT '',
+  proposed_action TEXT NOT NULL DEFAULT '',
+  confirmation_required INTEGER NOT NULL DEFAULT 1 CHECK (confirmation_required IN (0, 1)),
+  decision TEXT NOT NULL DEFAULT '',
+  notes TEXT NOT NULL DEFAULT '',
+  content_hash TEXT NOT NULL UNIQUE,
+  parent_id TEXT REFERENCES radar_items(id),
+  original_content TEXT NOT NULL DEFAULT '',
+  action_status TEXT NOT NULL DEFAULT 'solo_informativa' CHECK (action_status IN ('solo_informativa', 'da_verificare', 'pronta_analisi', 'pronta_implementazione', 'in_attesa_conferma', 'completata', 'rifiutata')),
+  unread INTEGER NOT NULL DEFAULT 1 CHECK (unread IN (0, 1)),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS radar_items_status_idx ON radar_items(verification_status, unread);
+CREATE INDEX IF NOT EXISTS radar_items_source_idx ON radar_items(source_id, published_at);
+
+CREATE TABLE IF NOT EXISTS radar_actions (
+  id TEXT PRIMARY KEY,
+  item_id TEXT NOT NULL REFERENCES radar_items(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  details TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'solo_informativa' CHECK (status IN ('solo_informativa', 'da_verificare', 'pronta_analisi', 'pronta_implementazione', 'in_attesa_conferma', 'completata', 'rifiutata')),
+  confirmation_required INTEGER NOT NULL DEFAULT 1 CHECK (confirmation_required IN (0, 1)),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS radar_actions_item_idx ON radar_actions(item_id, status);
+
+-- Radar Spesa Locale: offers are source-backed and never include loyalty credentials.
+CREATE TABLE IF NOT EXISTS shopping_stores (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  city TEXT NOT NULL,
+  address TEXT NOT NULL DEFAULT '',
+  source_url TEXT NOT NULL,
+  source_label TEXT NOT NULL DEFAULT '',
+  active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
+  last_checked_at TEXT,
+  last_error TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS shopping_offers (
+  id TEXT PRIMARY KEY,
+  store_id TEXT NOT NULL REFERENCES shopping_stores(id),
+  product_name TEXT NOT NULL,
+  normalized_name TEXT NOT NULL,
+  brand TEXT NOT NULL DEFAULT '',
+  package_text TEXT NOT NULL DEFAULT '',
+  price_cents INTEGER NOT NULL CHECK (price_cents >= 0),
+  unit_price_cents INTEGER CHECK (unit_price_cents IS NULL OR unit_price_cents >= 0),
+  valid_from TEXT NOT NULL DEFAULT '',
+  valid_to TEXT NOT NULL DEFAULT '',
+  source_url TEXT NOT NULL,
+  source_text TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'da_verificare' CHECK (status IN ('verificata', 'da_verificare')),
+  confidence TEXT NOT NULL DEFAULT 'media',
+  content_hash TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS shopping_offers_lookup_idx ON shopping_offers(store_id, normalized_name, valid_to, status);
+
+CREATE TABLE IF NOT EXISTS shopping_source_documents (
+  id TEXT PRIMARY KEY,
+  store_id TEXT NOT NULL REFERENCES shopping_stores(id),
+  document_url TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL DEFAULT '',
+  valid_from TEXT NOT NULL DEFAULT '',
+  valid_to TEXT NOT NULL DEFAULT '',
+  discovered_at TEXT NOT NULL,
+  content_hash TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS shopping_source_documents_store_idx ON shopping_source_documents(store_id, valid_to);

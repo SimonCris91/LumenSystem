@@ -2,7 +2,7 @@ param(
   [ValidateSet('Start', 'Stop', 'Restart', 'Status', 'Uninstall')]
   [string]$Action = 'Status',
   [string]$TaskName = 'LumenSystem Calendar Server',
-  [int]$Port = 8787
+  [int]$Port = 8789
 )
 
 $ErrorActionPreference = 'Stop'

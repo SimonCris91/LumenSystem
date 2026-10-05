@@ -12,6 +12,8 @@
     </script>
     <link rel="stylesheet" href="styles.css?v=20261003-2" />
     <link rel="stylesheet" href="module-links.css?v=20261004-1" />
+    <link rel="stylesheet" href="radar.css?v=20261004-1" />
+    <link rel="stylesheet" href="shopping.css?v=20261004-2" />
   </head>
   <body data-theme="dark">
     <div class="app-shell">
@@ -30,11 +32,13 @@
             <option value="warehouse">Spesa</option>
             <option value="vehicles">Mezzi di casa</option>
             <option value="files">Documenti condivisi</option>
+            <option value="shopping">Spesa locale</option>
+            <option value="radar">Radar AI</option>
             <option value="ecosystem">Ecosistema AI</option>
+            <option value="controller">Controller Codex</option>
           </select>
         </nav>
 
-        <div class="sidebar-team-head"><span class="side-label">SQUADRA</span><span class="team-total">06</span></div>
         <div class="team-list" id="sidebarTeam"></div>
 
         <div class="sidebar-bottom">
@@ -118,12 +122,15 @@
         <div class="dialog-actions"><span class="dialog-spacer"></span><button class="button button-quiet" type="button" data-action="close-users">Chiudi</button></div>
       </form>
     </dialog>
-    <script src="app.js?v=26" defer></script>
+    <script src="shopping.js?v=20261005-3" defer></script>
+    <script src="controller.js?v=20261005-2" defer></script>
+    <script src="app.js?v=20261005-5" defer></script>
     <script src="document-reader.js?v=20260930-3" defer></script>
     <script src="warehouse.js?v=20260930-5" defer></script>
     <script src="vehicles.js?v=2" defer></script>
     <script src="files.js?v=20261003-2" defer></script>
-    <script src="modules.js?v=20261004-2" defer></script>
+    <script src="modules.js?v=20261005-4" defer></script>
+    <script src="radar.js?v=20261004-1" defer></script>
     <script src="server-client.js?v=22" defer></script>
   </body>
 </html>

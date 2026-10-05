@@ -7,16 +7,16 @@ Questa procedura usa solo il repository Lumen System e non modifica LavorMetal.
 Apri PowerShell sul PC2 e usa:
 
 ```powershell
-New-Item -ItemType Directory -Force C:\LumenSystem | Out-Null
-git clone --branch main https://github.com/SimonCris91/LumenSystem.git C:\LumenSystem\source
+New-Item -ItemType Directory -Force D:\Codex\LumenSystem | Out-Null
+git clone --branch main https://github.com/SimonCris91/LumenSystem.git D:\Codex\LumenSystem\source
 ```
 
 ## 2. Prepara la produzione
 
 ```powershell
-New-Item -ItemType Directory -Force C:\LumenSystem\data,C:\LumenSystem\Condivisa | Out-Null
-Copy-Item C:\LumenSystem\source\web C:\LumenSystem\web -Recurse -Force
-Copy-Item C:\LumenSystem\source\server C:\LumenSystem\server -Recurse -Force
+New-Item -ItemType Directory -Force D:\Codex\LumenSystem\data,D:\Codex\LumenSystem\Condivisa | Out-Null
+Copy-Item D:\Codex\LumenSystem\source\web D:\Codex\LumenSystem\web -Recurse -Force
+Copy-Item D:\Codex\LumenSystem\source\server D:\Codex\LumenSystem\server -Recurse -Force
 ```
 
 ## 3. Crea il token locale
@@ -36,25 +36,25 @@ Non stampare né condividere il valore del token.
 
 ```powershell
 $env:LUMEN_API_TOKEN = [Environment]::GetEnvironmentVariable('LUMEN_API_TOKEN','Machine')
-py -3 C:\LumenSystem\server\app.py --db C:\LumenSystem\data\lumen-system.sqlite3 --init
+py -3 D:\Codex\LumenSystem\server\app.py --db D:\Codex\LumenSystem\data\lumen-system.sqlite3 --init
 ```
 
 ## 5. Crea il primo amministratore
 
 ```powershell
-py -3 C:\LumenSystem\server\app.py --db C:\LumenSystem\data\lumen-system.sqlite3 --create-admin --login admin
+py -3 D:\Codex\LumenSystem\server\app.py --db D:\Codex\LumenSystem\data\lumen-system.sqlite3 --create-admin --login admin
 ```
 
 ## 6. Avvia il server
 
 ```powershell
-PowerShell -ExecutionPolicy Bypass -File C:\LumenSystem\server\start-server.ps1 -Database C:\LumenSystem\data\lumen-system.sqlite3
+PowerShell -ExecutionPolicy Bypass -File D:\Codex\LumenSystem\server\start-server.ps1 -Port 8789 -Database D:\Codex\LumenSystem\data\lumen-system.sqlite3
 ```
 
 Verifica:
 
 ```powershell
-Invoke-RestMethod http://127.0.0.1:8787/health
+Invoke-RestMethod http://127.0.0.1:8789/health
 ```
 
 ## 7. Dominio
