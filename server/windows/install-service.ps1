@@ -1,7 +1,7 @@
 param(
   [string]$TaskName = 'LumenSystem Calendar Server',
   [string]$Database = (Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'data\lumen-system.sqlite3'),
-  [int]$Port = 8787
+  [int]$Port = 8789
 )
 
 $ErrorActionPreference = 'Stop'

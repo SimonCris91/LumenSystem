@@ -121,6 +121,9 @@ function render() {
   else if (state.page === "warehouse") content.innerHTML = renderWarehousePage();
   else if (state.page === "vehicles") content.innerHTML = window.renderVehiclesPage?.() || "";
   else if (state.page === "files") content.innerHTML = window.renderFilesPage?.() || "";
+  else if (state.page === "shopping") content.innerHTML = window.renderShoppingPage?.() || "";
+  else if (state.page === "controller") content.innerHTML = window.renderControllerPage?.() || "";
+  else if (state.page === "radar") content.innerHTML = window.renderRadarPage?.() || "";
   else if (state.page === "ecosystem") content.innerHTML = window.renderModulesPage?.() || "";
   else content.innerHTML = renderCalendarPage();
   $("#addTaskButton").classList.toggle("hidden", state.page !== "calendar");
@@ -328,13 +331,16 @@ document.addEventListener("change", (event) => {
   if (state.page === "warehouse") window.loadWarehousePage?.();
   if (state.page === "vehicles") window.loadVehiclesPage?.();
   if (state.page === "files") window.loadFilesPage?.();
+  if (state.page === "shopping") window.loadShoppingPage?.();
+  if (state.page === "controller") window.loadControllerPage?.();
+  if (state.page === "radar") window.loadRadarPage?.();
 });
 
 document.addEventListener("click", async (event) => {
   const target = event.target.closest("[data-action]");
   if (!target) return;
   const action = target.dataset.action;
-  if (action === "navigate") { state.page = target.dataset.page; state.query = ""; if (state.page === "files") window.setFilesFolder?.(target.dataset.folder || "all"); render(); if (state.page === "warehouse") window.loadWarehousePage?.(); if (state.page === "vehicles") window.loadVehiclesPage?.(); if (state.page === "files") window.loadFilesPage?.(); }
+  if (action === "navigate") { state.page = target.dataset.page; state.query = ""; if (state.page === "files") window.setFilesFolder?.(target.dataset.folder || "all"); render(); if (state.page === "warehouse") window.loadWarehousePage?.(); if (state.page === "vehicles") window.loadVehiclesPage?.(); if (state.page === "files") window.loadFilesPage?.(); if (state.page === "shopping") window.loadShoppingPage?.(); if (state.page === "radar") window.loadRadarPage?.(); if (state.page === "controller") window.loadControllerPage?.(); }
   else if (action === "today") { state.anchor = today; state.selectedDate = toISO(today); state.page = "calendar"; render(); }
   else if (action === "toggle-theme") setTheme(document.body.dataset.theme === "dark" ? "light" : "dark");
   else if (action === "server-logout") {
@@ -429,7 +435,7 @@ window.LMCalendar = {
     activities = Array.isArray(next) ? next.map((task) => ({ ...task, date: task.date || "", people: [...(task.people || [])] })) : [];
     const dated = activities.filter((task) => task.date).map((task) => task.date).sort().at(-1);
     if (dated && !preserveView) { state.selectedDate = dated; state.anchor = fromISO(dated); }
-    if (preserveView && ["warehouse", "files", "vehicles"].includes(state.page)) renderSidebar();
+    if (preserveView && ["warehouse", "files", "vehicles", "shopping", "radar", "ecosystem", "controller"].includes(state.page)) renderSidebar();
     else render();
   },
   render
