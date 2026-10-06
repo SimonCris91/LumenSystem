@@ -11,12 +11,15 @@ permissions:
 jobs:
   python:
     name: Python compile and tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
+      - name: Prepare Windows test workspace
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force 'D:\CodexTools' | Out-Null
       - name: Compile server sources
         run: python -m compileall -q server
       - name: Run unit tests
