@@ -32,3 +32,14 @@ py -3 .\server\app.py --db .\data\lumen-system.sqlite3 --create-admin --login ad
 ```
 
 La pubblicazione, il dominio e l'integrazione con WhatsApp saranno configurati in una fase separata. Non usare mai questo progetto per modificare LavorMetal.
+
+
+## Registry operativo Ecosistema AI
+
+Lumen espone ora un registry server-side autenticato per descrivere i moduli dell'ecosistema senza importare repository, database o credenziali esterne.
+
+- `GET /api/v1/ecosystem/modules` restituisce identità, capacità, modalità di integrazione e accesso dei moduli.
+- `GET /api/v1/ecosystem/status` aggiunge soltanto stati osservabili dal processo Lumen. I siti esterni non vengono interrogati automaticamente: un collegamento pubblico viene indicato come `external`, non come online.
+- La pagina **Ecosistema AI** usa il registry del server quando disponibile e mantiene un fallback locale descrittivo quando il server non è raggiungibile.
+
+Questa API è il contratto di lettura previsto per un futuro bridge MCP/ChatGPT. Non consente comandi arbitrari, proxy HTTP verso destinazioni scelte dal client, lettura di segreti o accesso diretto ai database degli altri progetti.
