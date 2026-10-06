@@ -135,6 +135,17 @@ Variabili:
 
 Installa Ollama sul PC che ospita il server e scarica `qwen3-vl:4b`. Il modello viene eseguito localmente e non richiede una chiave API né crediti a consumo. La foto viene inviata al server Lumen System per l'analisi locale; il file originale non viene conservato. Le righe estratte restano una bozza da verificare e vengono salvate nel database solo dopo la conferma nel Magazzino.
 
+## Ecosistema AI operativo
+
+Il registry centrale vive in `server/ecosystem.py` e contiene soltanto metadati descrittivi: identità, capacità, owner, modalità di integrazione e accesso. Non contiene credenziali né legge i database degli altri progetti.
+
+Le rotte autenticate sono:
+
+- `GET /api/v1/ecosystem/modules`: registry dei moduli, pensato anche come contratto stabile per un futuro bridge MCP/ChatGPT.
+- `GET /api/v1/ecosystem/status`: stato di Lumen e dei soli componenti osservabili localmente. Gli URL esterni non vengono usati come health check e sono riportati come `external`.
+
+Stati di connessione previsti: `connected`, `external`, `not_configured`, `not_connected`, `unreachable` e `unknown`. La presenza di un URL non equivale a disponibilità verificata.
+
 ## Rotte iniziali
 
 - `GET /health` non richiede token.
