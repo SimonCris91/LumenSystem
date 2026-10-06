@@ -3,3 +3,16 @@
 .module-link.muted{color:var(--muted,#7a837a);font-weight:500}
 body[data-theme="dark"] .module-link{color:#b99eff}
 body[data-theme="dark"] .module-link.muted{color:#899489}
+
+.module-heading-meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.ecosystem-source{font-size:10px;color:var(--muted,#7a837a)}
+.module-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.connection-pill{padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700;background:#eef1f4;color:#59636f}
+.connection-connected{background:#e4f4e9;color:#26724d}
+.connection-external{background:#e8eff8;color:#42668a}
+.connection-not_configured{background:#f1eef5;color:#786b86}
+.connection-not_connected{background:#fff0da;color:#96601b}
+.connection-unreachable{background:#f8e4e4;color:#9a3e3e}
+.connection-unknown{background:#eef1f4;color:#59636f}
+body[data-theme="dark"] .connection-pill{filter:brightness(.88)}
+@media(max-width:620px){.module-heading-meta{align-items:flex-start;margin-top:10px}.module-badges{justify-content:flex-start}}
