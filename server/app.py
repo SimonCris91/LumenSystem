@@ -44,6 +44,7 @@ from shared_import import import_sketchup
 from codex_controller import CodexController
 from radar import RadarMonitor, ensure_sources as ensure_radar_sources, get_item as radar_get_item, list_items as radar_list_items, list_sources as radar_list_sources, summary as radar_summary, update_item as radar_update_item, create_action as radar_create_action
 from shopping import check_sources as shopping_check_sources, compare_basket, create_offer as shopping_create_offer, discover_sources as shopping_discover_sources, ensure_sources as ensure_shopping_sources, list_offers as shopping_list_offers, list_source_documents as shopping_list_source_documents, list_stores as shopping_list_stores, verify_offer as shopping_verify_offer
+from ecosystem import build_status as build_ecosystem_status, list_modules as list_ecosystem_modules
 
 
 ROOT = Path(__file__).resolve().parent
@@ -926,6 +927,20 @@ class Handler(BaseHTTPRequestHandler):
                 raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Risorsa non trovata.")
             user = self.authenticate()
             query = parse_qs(parsed.query)
+            if parsed.path == "/api/v1/ecosystem/modules":
+                self.send_json({"modules": list_ecosystem_modules()})
+                return
+            if parsed.path == "/api/v1/ecosystem/status":
+                radar_state = self.server.radar_monitor.status()  # type: ignore[attr-defined]
+                self.send_json(build_ecosystem_status(
+                    self.store,
+                    timestamp=utc_now(),
+                    runtime={
+                        "radar": bool(radar_state.get("active")),
+                        "shopping": True,
+                    },
+                ))
+                return
             if parsed.path == "/api/v1/controller/status":
                 self.require_admin()
                 self.send_json(self.server.codex_controller.status())
