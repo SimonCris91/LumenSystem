@@ -17,6 +17,8 @@ La sezione **Ecosistema AI** del gestionale raccoglie i moduli specialistici di 
 
 Il routing operativo resta separato: Account Finder produce indizi, l'Inbox classifica le fonti, NEXUS organizza il contesto e Lumen mostra calendario, scadenze e attività. Mutazioni esterne, ordini, email e pagamenti richiedono sempre il rispettivo gate del progetto.
 
+AI Remote può consultare in sola lettura le attività tramite una rotta dedicata e un token server-to-server separato. L'integrazione non concede accesso al database, ai documenti o alle API di scrittura; resta disattivata finché il token dedicato non viene configurato sul server.
+
 ## Avvio locale
 
 ```powershell

@@ -96,10 +96,10 @@ MODULES: tuple[dict[str, Any], ...] = (
         "name": "AI Remote",
         "kind": "Voce e dispositivi",
         "state": "modulo",
-        "description": "Controller voice-first per comandi personali e dispositivi remoti con backend autenticato.",
+        "description": "Controller voice-first con consultazione di sola lettura delle attività LumenSystem tramite API autenticata dedicata.",
         "owner": "ai-remote-engineering",
-        "capabilities": ["voice-control", "remote-device-control"],
-        "integration_mode": "internal_module",
+        "capabilities": ["voice-control", "remote-device-control", "activities-read"],
+        "integration_mode": "authenticated_api",
         "access_mode": "not_configured",
     },
     {

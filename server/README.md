@@ -115,6 +115,7 @@ Per un PC dell'officina il bind predefinito `127.0.0.1` è intenzionale. Imposta
 Variabili:
 
 - `LUMEN_API_TOKEN`: token temporaneo di bootstrap per le chiamate API.
+- `LUMEN_AI_REMOTE_READ_TOKEN`: token dedicato, sola lettura, per l'integrazione server-to-server con AI Remote; non sostituisce né riusa il token di bootstrap.
 - `LUMEN_DB`: percorso del file SQLite (predefinito `server/data/lumen-system.sqlite3`).
 - `LUMEN_PORT`: porta API (predefinita `8789`).
 - `LUMEN_ALLOWED_ORIGIN`: origine web autorizzata per CORS; lasciarla vuota finché sito e API non condividono un dominio controllato.
@@ -124,8 +125,8 @@ Variabili:
 - `LUMEN_WA_APP_SECRET`: App Secret Meta usato per controllare `X-Hub-Signature-256`.
 - `LUMEN_WA_GRAPH_VERSION`: versione Graph API (predefinita `v23.0`).
 - `LUMEN_SHARED_DIR`: cartella dei file condivisi; predefinita a `C:\\Lumen System\\Condivisa`.
-- `LUMEN_SKETCHUP_SOURCE_DIR`: percorso della condivisione SketchUp configurato localmente; non inserire percorsi interni nel repository.
-- `LUMEN_SKETCHUP_MAC_DIR`: seconda condivisione SketchUp opzionale, configurata localmente; non inserire percorsi interni nel repository.
+- `LUMEN_SKETCHUP_SOURCE_DIR`: percorso UNC della condivisione SketchUp, per esempio `\\UFFICIO2\SketchupProgetti`.
+- `LUMEN_SKETCHUP_MAC_DIR`: seconda condivisione SketchUp opzionale, per esempio `\\192.168.1.111\skethup progetti`.
 - `LUMEN_SKETCHUP_AGENT_TOKEN`: chiave dedicata al sincronizzatore macOS; consente soltanto polling delle richieste, lettura delle impronte `.SKP` e caricamento di nuovi file SketchUp.
 - `LUMEN_DOCUMENTI_WINDOWS_DIR`: percorso assoluto della cartella Documenti accessibile dal server, locale o UNC.
 - `OLLAMA_BASE_URL`: indirizzo locale del servizio Ollama (predefinito `http://127.0.0.1:11434`).
@@ -145,6 +146,12 @@ Le rotte autenticate sono:
 - `GET /api/v1/ecosystem/status`: stato di Lumen e dei soli componenti osservabili localmente. Gli URL esterni non vengono usati come health check e sono riportati come `external`.
 
 Stati di connessione previsti: `connected`, `external`, `not_configured`, `not_connected`, `unreachable` e `unknown`. La presenza di un URL non equivale a disponibilità verificata.
+
+### AI Remote · consultazione attività
+
+`GET /api/v1/integrations/ai-remote/activities?from=YYYY-MM-DD&to=YYYY-MM-DD` restituisce al massimo 50 attività in un intervallo massimo di 31 giorni. Espone solo ID, titolo, data, luogo, persone, stato e note (limitate a 500 caratteri); non offre operazioni di scrittura.
+
+La rotta richiede `Authorization: Bearer <LUMEN_AI_REMOTE_READ_TOKEN>`, un segreto separato e limitato a questa singola lettura. AI Remote lo conserva solo nell'ambiente del proprio backend. Per il prototipo sullo stesso PC si può usare `http://127.0.0.1:8789`; qualsiasi collegamento da host remoto deve usare HTTPS. Non inserire questo token nell'APK, nel browser o nel repository.
 
 ## Rotte iniziali
 

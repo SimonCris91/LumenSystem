@@ -392,6 +392,14 @@ class Handler(BaseHTTPRequestHandler):
         if not supplied or not hmac.compare_digest(supplied, expected):
             raise ApiError(HTTPStatus.UNAUTHORIZED, "sketchup_agent_unauthorized", "Servizio SketchUp non autorizzato.")
 
+    def require_ai_remote_read(self) -> None:
+        expected = self.settings.get("ai_remote_read_token", "")
+        if not expected:
+            raise ApiError(HTTPStatus.SERVICE_UNAVAILABLE, "ai_remote_not_configured", "L'integrazione AI Remote non è configurata.")
+        scheme, _, supplied = self.headers.get("Authorization", "").partition(" ")
+        if scheme.casefold() != "bearer" or not supplied or not hmac.compare_digest(supplied, expected):
+            raise ApiError(HTTPStatus.UNAUTHORIZED, "ai_remote_unauthorized", "Accesso AI Remote non autorizzato.")
+
     def send_agent_text(self, body: str) -> None:
         encoded = body.encode("ascii")
         self.send_response(HTTPStatus.OK)
@@ -904,6 +912,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if parsed.path == "/health":
                 self.send_json({"ok": True, "service": "lumen-system-api", "time": utc_now()})
+                return
+            if parsed.path == "/api/v1/integrations/ai-remote/activities":
+                self.require_ai_remote_read()
+                self.send_json(self.list_ai_remote_activities(parse_qs(parsed.query)))
                 return
             if parsed.path == "/api/v1/sketchup-agent/request":
                 self.require_sketchup_agent()
@@ -1681,6 +1693,31 @@ class Handler(BaseHTTPRequestHandler):
             result.append(activity_payload(row, people))
         return result
 
+    def list_ai_remote_activities(self, query: dict[str, list[str]]) -> dict[str, Any]:
+        date_from = query.get("from", [""])[0]
+        date_to = query.get("to", [""])[0]
+        try:
+            start = datetime.strptime(date_from, "%Y-%m-%d").date()
+            end = datetime.strptime(date_to, "%Y-%m-%d").date()
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_date_range", "Indica un intervallo date valido nel formato YYYY-MM-DD.") from exc
+        if end < start or (end - start).days > 30:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_date_range", "L'intervallo massimo consultabile è di 31 giorni.")
+
+        activities = self.list_activities({"from": [date_from], "to": [date_to]})
+        allowed_fields = ("id", "title", "date", "place", "people", "status", "notes")
+        sanitized = [
+            {
+                **{key: activity[key] for key in allowed_fields if key != "notes"},
+                "notes": str(activity.get("notes", ""))[:500],
+                "title": str(activity.get("title", ""))[:240],
+                "place": str(activity.get("place", ""))[:160],
+                "people": [str(person)[:80] for person in activity.get("people", [])[:12]],
+            }
+            for activity in activities[:50]
+        ]
+        return {"from": date_from, "to": date_to, "activities": sanitized}
+
     def activity_input(self, data: dict[str, Any], existing: dict[str, Any] | None = None) -> dict[str, Any]:
         source = {**(existing or {}), **data}
         title = str(source.get("title", "")).strip()
@@ -2337,13 +2374,14 @@ def main() -> None:
         print("ATTENZIONE: LUMEN_API_TOKEN non configurato; l'API risponderà 503.", file=sys.stderr)
     settings = {
         "token": token,
+        "ai_remote_read_token": os.getenv("LUMEN_AI_REMOTE_READ_TOKEN", ""),
         "allowed_origin": os.getenv("LUMEN_ALLOWED_ORIGIN", "").strip() or "http://127.0.0.1:8789",
         "cookie_secure": os.getenv("LUMEN_COOKIE_SECURE", "0"),
         "cookie_samesite": os.getenv("LUMEN_COOKIE_SAMESITE", "Lax"),
         "web_root": str(args.web_root),
         "shared_root": os.getenv("LUMEN_SHARED_DIR", str(ROOT.parent / "Condivisa")),
-- `LUMEN_SKETCHUP_SOURCE_DIR`: percorso della condivisione SketchUp configurato localmente; non inserire percorsi interni nel repository.
-- `LUMEN_SKETCHUP_MAC_DIR`: seconda condivisione SketchUp opzionale, configurata localmente; non inserire percorsi interni nel repository.
+        "sketchup_source_dir": os.getenv("LUMEN_SKETCHUP_SOURCE_DIR", ""),
+        "sketchup_mac_dir": os.getenv("LUMEN_SKETCHUP_MAC_DIR", ""),
         "sketchup_agent_token": os.getenv("LUMEN_SKETCHUP_AGENT_TOKEN", ""),
         "documents_windows_dir": os.getenv("LUMEN_DOCUMENTI_WINDOWS_DIR", ""),
         "wa_waba_id": os.getenv("LUMEN_WA_WABA_ID", ""),
